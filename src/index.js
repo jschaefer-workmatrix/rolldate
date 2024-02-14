@@ -26,7 +26,7 @@ function Rolldate(config = {}){
       _this.show();
     })
   }
-  // 设置默认日期
+  // Config ready?
   if(config.value){
     if(config.el){
       if(el.nodeName.toLowerCase() == 'input'){
@@ -53,27 +53,44 @@ Rolldate.prototype = {
   constructor: Rolldate,
   baseData: function(){
     return {
-      domId:{
-        YYYY:'rolldate-year',
-        MM:'rolldate-month',
-        DD:'rolldate-day',
-        hh:'rolldate-hour',
-        mm:'rolldate-min',
-        ss:'rolldate-sec'
+      domId: {
+        YYYY: "rolldate-year",
+        MM: "rolldate-month",
+        DD: "rolldate-day",
+        hh: "rolldate-hour",
+        mm: "rolldate-min",
+        ss: "rolldate-sec",
       },
-      opts:{//插件默认配置
-        el:'',
-        format:'YYYY-MM-DD',
-        beginYear:2000,
-        endYear:2100,
-        init:null,
-        moveEnd:null,
-        confirm:null,
-        cancel:null,
-        minStep:1,
-        trigger:'tap',
-        lang:{title:'选择日期', cancel:'取消', confirm:'确认', year:'年', month:'月', day:'日', hour:'时', min:'分', sec:'秒'}
-      }
+      opts: {
+        // default config
+        el: "",
+        format: "YYYY-MM-DD",
+        beginYear: 2000,
+        endYear: 2100,
+        init: null,
+        moveEnd: null,
+        confirm: null,
+        cancel: null,
+        minStep: 1,
+        trigger: "tap",
+        pickedDate: {
+          year: null,
+          month: null,
+          day: null,
+          date: null,
+        },
+        lang: {
+          title: "Chose a date",
+          cancel: "cancel",
+          confirm: "OK",
+          year: "",
+          month: "",
+          day: "",
+          hour: "",
+          min: "",
+          sec: "",
+        },
+      },
     };
   },
   extend: function(config){
@@ -192,11 +209,17 @@ Rolldate.prototype = {
         index = active? active.getAttribute('data-index') : Math.round(date.getMinutes()/config.minStep);
  
       that.wheelTo(index);
-      // 滚动结束
+
       that.on('scrollEnd', () => {
         if(config.moveEnd){
           config.moveEnd.call(_this, that);
         }
+        
+        _this.config.pickedDate.year = parseInt(_this.getSelected(_this.scroll['YYYY']));
+        _this.config.pickedDate.month = parseInt(_this.getSelected(_this.scroll['MM']));
+        _this.config.pickedDate.day = parseInt(_this.getSelected(_this.scroll['DD']));
+        _this.config.pickedDate.date = new Date(_this.config.pickedDate.year, (_this.config.pickedDate.month - 1), _this.config.pickedDate.day);
+
         if([domId['YYYY'], domId['MM']].indexOf(that.wrapper.id) != -1 && _this.scroll['YYYY'] && _this.scroll['MM'] && _this.scroll['DD']){
           let day = _this.getMonthlyDay(_this.getSelected(_this.scroll['YYYY']), _this.getSelected(_this.scroll['MM'])),
             li = '';
@@ -352,7 +375,7 @@ Rolldate.prototype = {
     } else if (month == 4 || month == 6 || month == 11 || month == 9) {
       day = 30
     } else if (month == 2) {
-      if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) { //闰年
+      if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) { // leap years
         day = 29
       } else {
         day = 28
