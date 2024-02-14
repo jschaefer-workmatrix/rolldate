@@ -1,7 +1,7 @@
 {
   "name": "rolldate-wmx",
   "version": "4.1.2",
-  "description": "iOs rolldate picker",
+  "description": "iOs rolldate picker for web",
   "main": "dist/rolldate.min.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config config/rolldate.config.js --mode development",
