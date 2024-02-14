@@ -211,14 +211,18 @@ Rolldate.prototype = {
       that.wheelTo(index);
 
       that.on('scrollEnd', () => {
+        try {
+          _this.config.pickedDate.year = parseInt(_this.getSelected(_this.scroll['YYYY']));
+          _this.config.pickedDate.month = parseInt(_this.getSelected(_this.scroll['MM']));
+          _this.config.pickedDate.day = parseInt(_this.getSelected(_this.scroll['DD']));
+          _this.config.pickedDate.date = new Date(_this.config.pickedDate.year, (_this.config.pickedDate.month - 1), _this.config.pickedDate.day);
+        } catch(e){
+          console.log('Could not store date on moveEnd');
+        }
+
         if(config.moveEnd){
           config.moveEnd.call(_this, that);
         }
-        
-        _this.config.pickedDate.year = parseInt(_this.getSelected(_this.scroll['YYYY']));
-        _this.config.pickedDate.month = parseInt(_this.getSelected(_this.scroll['MM']));
-        _this.config.pickedDate.day = parseInt(_this.getSelected(_this.scroll['DD']));
-        _this.config.pickedDate.date = new Date(_this.config.pickedDate.year, (_this.config.pickedDate.month - 1), _this.config.pickedDate.day);
 
         if([domId['YYYY'], domId['MM']].indexOf(that.wrapper.id) != -1 && _this.scroll['YYYY'] && _this.scroll['MM'] && _this.scroll['DD']){
           let day = _this.getMonthlyDay(_this.getSelected(_this.scroll['YYYY']), _this.getSelected(_this.scroll['MM'])),
