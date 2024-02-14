@@ -1,4 +1,4 @@
-name: Publish to NPM
+name: Publish to NPM 2.0
 on:
   push:
     branches: master
