@@ -1,6 +1,6 @@
 {
   "name": "rolldate-wmx",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "iOs rolldate picker",
   "main": "dist/rolldate.min.js",
   "scripts": {
